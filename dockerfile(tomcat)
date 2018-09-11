@@ -1,0 +1,26 @@
+FROM tomcat:8.5.33-jre10-slim
+
+LABEL maintainer="Shubham Gupta"
+
+RUN apt-get update \
+    && apt-get install software-properties-common -y \
+    && add-apt-repository ppa:webupd8team/java \
+    && apt-get install build-essential -y \
+    && apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886 \
+    && apt-get update \
+    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
+    && apt-get install -y oracle-java8-installer \
+    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/cache/oracle-jdk8-installer
+    && apt-get install libapr1-dev libaprutil1-dev -y
+
+
+WORKDIR /data
+
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
+
+RUN wget http://mirrors.fibergrid.in/apache/tomcat/tomcat-connectors/native/1.2.17/source/tomcat-native-1.2.17-src.tar.gz \
+    && tar -zvxf tomcat-native-1.2.17-src.tar.gz \
+    && apt-get update \
+    && cd tomcat-native-1.2.17-src/native && ./configure && make && make install
+
