@@ -1,0 +1,16 @@
+version: '2'
+services:
+  tomcat:
+    container_name: tomcat-container
+    image: tomcat1
+    ports:
+      - '8080:8080'
+    volumes:
+     - ./tomcat:/tomcat
+  nginx:
+    container_name: nginx
+    image: nginx1.1
+    ports:
+      - '8090:80'
+    volumes:
+     - ./nginx:/nginx
